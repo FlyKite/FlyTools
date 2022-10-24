@@ -1,0 +1,23 @@
+PODS:
+  - FlyUtils (0.0.1)
+  - SnapKit (5.6.0)
+
+DEPENDENCIES:
+  - FlyUtils (from `../FlyUtils`)
+  - SnapKit
+
+SPEC REPOS:
+  trunk:
+    - SnapKit
+
+EXTERNAL SOURCES:
+  FlyUtils:
+    :path: "../FlyUtils"
+
+SPEC CHECKSUMS:
+  FlyUtils: 4d418a4160e03cb08f7acd0f427883dd565b70d7
+  SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
+
+PODFILE CHECKSUM: e2c8a7100ab52a0c72547a7c33151f49cb5a4db1
+
+COCOAPODS: 1.11.3
