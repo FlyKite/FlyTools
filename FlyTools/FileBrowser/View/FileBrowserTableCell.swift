@@ -11,7 +11,10 @@ class FileBrowserTableCell: UITableViewCell {
     
     var icon: UIImage? {
         get { iconView.image }
-        set { iconView.image = newValue }
+        set {
+            iconView.image = newValue
+            iconView.isHidden = newValue == nil
+        }
     }
     var fileName: String? {
         get { fileNameLabel.text }
@@ -32,18 +35,21 @@ class FileBrowserTableCell: UITableViewCell {
     }
     
     private func setupViews() {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 8
+        stack.alignment = .center
+        
+        iconView.isHidden = true
+        
         fileNameLabel.font = UIFont.systemFont(ofSize: 16)
         
-        contentView.addSubview(iconView)
-        contentView.addSubview(fileNameLabel)
+        contentView.addSubview(stack)
+        stack.addArrangedSubview(iconView)
+        stack.addArrangedSubview(fileNameLabel)
         
-        iconView.snp.makeConstraints { make in
+        stack.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(16)
-            make.centerY.equalToSuperview()
-        }
-        
-        fileNameLabel.snp.makeConstraints { make in
-            make.left.equalTo(iconView.snp.right).offset(8)
             make.right.lessThanOrEqualToSuperview().offset(-16)
             make.centerY.equalToSuperview()
         }

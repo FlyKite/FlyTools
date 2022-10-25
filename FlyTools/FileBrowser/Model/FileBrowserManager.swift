@@ -7,153 +7,84 @@
 
 import Foundation
 
-struct FileContainer {
-    let name: String
-    let url: URL
-}
-
-protocol FileBrowserDataSource {
+protocol FileBrowserProvider {
     var currentDirectoryName: String { get }
     var showHiddenFiles: Bool { get }
-    var contents: [String] { get }
-    func contentType(for contentName: String) -> FileContentType
-    func url(for contentName: String) -> URL
+    var items: [FileItem] { get }
+    
+    func canDelete(at index: Int) -> Bool
+    func delete(at index: Int) -> Bool
 }
 
-enum FileContentType {
-    case directory
-    case text
-    case image
-    case video
-    case audio
-    case database
-    case unsupported
+class DirectoryBrowserManager: FileBrowserProvider {
     
-    var icon: UIImage? {
-        switch self {
-        case .directory: return UIImage(systemName: "folder.fill")
-        case .text: return UIImage(systemName: "doc.plaintext.fill")
-        case .image: return UIImage(systemName: "photo.fill")
-        case .video: return UIImage(systemName: "play.tv.fill")
-        case .audio: return UIImage(systemName: "music.note.tv.fill")
-        case .database: return UIImage(systemName: "chart.bar.doc.horizontal.fill")
-        case .unsupported: return UIImage(systemName: "doc.fill")
-        }
-    }
-}
-
-enum SupportedFileType: String {
-    case txt
-    case json
-    
-    case jpg
-    case jpeg
-    case png
-    case heic
-    case dng
-    case gif
-    case ktx
-    
-    case mp3
-    case m4a
-    case wav
-    
-    case mp4
-    case avi
-    
-    case sqlite
-}
-
-class FileBrowserManager: FileBrowserDataSource {
-    
-    let directoryUrl: URL
-    let currentDirectoryName: String
+    let directory: Directory
+    var currentDirectoryName: String { directory.name }
     let showHiddenFiles: Bool
     
-    private(set) var contents: [String] = []
-    private var contentTypeDict: [String: FileContentType] = [:]
+    private(set) var items: [FileItem] = []
     
-    init(sandbox container: SandboxContainer, showHiddenFiles: Bool) {
-        self.directoryUrl = URL(fileURLWithPath: container.path)
-        self.currentDirectoryName = container.name
-        self.showHiddenFiles = showHiddenFiles
-    }
-    
-    init(directoryUrl: URL? = nil, showHiddenFiles: Bool) {
-        self.directoryUrl = directoryUrl ?? URL(fileURLWithPath: NSHomeDirectory())
-        self.currentDirectoryName = directoryUrl == nil ? "Home" : self.directoryUrl.lastPathComponent
+    init(directory: Directory, showHiddenFiles: Bool) {
+        self.directory = directory
         self.showHiddenFiles = showHiddenFiles
         loadContents()
     }
     
     private func loadContents() {
         do {
-            let contents = try FileManager.default.contentsOfDirectory(atPath: directoryUrl.path)
-            if showHiddenFiles {
-                self.contents = contents
-            } else {
-                self.contents = contents.filter { !$0.starts(with: ".") }
+            var contents = try FileManager.default.contentsOfDirectory(atPath: directory.url.path)
+            if !showHiddenFiles {
+                contents = contents.filter { !$0.starts(with: ".") }
+            }
+            items = contents.map { name in
+                let url = directory.url.appendingPathComponent(name)
+                var isDirectory = ObjCBool(false)
+                FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory)
+                return isDirectory.boolValue ? .directory(Directory(url: url)) : .file(File(url: url))
             }
         } catch {
             print(error)
         }
     }
     
-    func contentType(for contentName: String) -> FileContentType {
-        if let contentType = contentTypeDict[contentName] {
-            return contentType
-        } else {
-            let url = directoryUrl.appendingPathComponent(contentName)
-            var isDirectory = ObjCBool(false)
-            FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory)
-            let contentType: FileContentType
-            if isDirectory.boolValue {
-                contentType = .directory
-            } else if let type = SupportedFileType(rawValue: url.pathExtension) {
-                switch type {
-                case .txt, .json: contentType = .text
-                case .jpg, .jpeg, .png, .heic, .dng, .gif, .ktx: contentType = .image
-                case .mp3, .m4a, .wav: contentType = .audio
-                case .mp4, .avi: contentType = .video
-                case .sqlite: contentType = .database
-                }
-            } else {
-                contentType = .unsupported
-            }
-            contentTypeDict[contentName] = contentType
-            return contentType
-        }
+    func canDelete(at index: Int) -> Bool {
+        return true
     }
     
-    func url(for contentName: String) -> URL {
-        return directoryUrl.appendingPathComponent(contentName)
+    func delete(at index: Int) -> Bool {
+        do {
+            let item = items[index]
+            try FileManager.default.removeItem(at: item.url)
+            items.remove(at: index)
+            return true
+        } catch {
+            print(error)
+            return false
+        }
     }
 }
 
-class SandboxContainerManager: FileBrowserDataSource {
+class SandboxBrowserManager: FileBrowserProvider {
+    
     let containers: [SandboxContainer]
     var currentDirectoryName: String { "Home" }
     let showHiddenFiles: Bool
     
-    let contents: [String]
-    private let urlDict: [String: URL]
+    let items: [FileItem]
     
     init(containers: [SandboxContainer], showHiddenFiles: Bool) {
         self.containers = containers
         self.showHiddenFiles = showHiddenFiles
-        self.contents = containers.map { $0.name }
-        var urlDict: [String: URL] = [:]
-        for container in containers {
-            urlDict[container.name] = URL(fileURLWithPath: container.path)
+        self.items = containers.map { container in
+            return .directory(Directory(url: URL(fileURLWithPath: container.path), name: container.name))
         }
-        self.urlDict = urlDict
     }
     
-    func contentType(for contentName: String) -> FileContentType {
-        return .directory
+    func canDelete(at index: Int) -> Bool {
+        return false
     }
     
-    func url(for contentName: String) -> URL {
-        return urlDict[contentName] ?? URL(fileURLWithPath: NSHomeDirectory())
+    func delete(at index: Int) -> Bool {
+        return false
     }
 }

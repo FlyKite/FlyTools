@@ -21,19 +21,25 @@ public struct SandboxContainer {
 
 public class FileBrowserViewController: UIViewController {
     
-    private let manager: FileBrowserDataSource
+    private let provider: FileBrowserProvider
     
     private let tableView: UITableView = UITableView()
     
-    private let queue: DispatchQueue = DispatchQueue(label: "com.FlyKite.FlyTools.FBVC", attributes: .concurrent)
-    
-    public init(directoryUrl: URL? = nil, showHiddenFiles: Bool = false) {
-        manager = FileBrowserManager(directoryUrl: directoryUrl, showHiddenFiles: showHiddenFiles)
+    public init(directory: Directory? = nil, showHiddenFiles: Bool = false) {
+        if let directory = directory {
+            provider = DirectoryBrowserManager(directory: directory,
+                                               showHiddenFiles: showHiddenFiles)
+        } else {
+            let url = URL(fileURLWithPath: NSHomeDirectory())
+            let directory = Directory(url: url, name: "Home")
+            provider = DirectoryBrowserManager(directory: directory,
+                                               showHiddenFiles: showHiddenFiles)
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
     public init(containers: [SandboxContainer], showHiddenFiles: Bool = false) {
-        manager = SandboxContainerManager(containers: containers, showHiddenFiles: showHiddenFiles)
+        provider = SandboxBrowserManager(containers: containers, showHiddenFiles: showHiddenFiles)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -45,20 +51,31 @@ public class FileBrowserViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
     }
+    
+    @objc private func close() {
+        navigationController?.dismiss(animated: true)
+    }
 }
 
 extension FileBrowserViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return manager.contents.count
+        return provider.items.count
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.ch.dequeueReusableCell(FileBrowserTableCell.self, for: indexPath)
-        let contentName = manager.contents[indexPath.row]
-        let contentType = manager.contentType(for: contentName)
-        cell.icon = contentType.icon
-        cell.fileName = contentName
-        cell.accessoryType = contentType == .directory ? .disclosureIndicator : .none
+        let item = provider.items[indexPath.row]
+        if #available(iOS 13.0, *) {
+            cell.icon = item.icon
+            cell.fileName = item.name
+        } else {
+            cell.fileName = "\(item.iconEmoji) \(item.name)"
+        }
+        if case .directory = item {
+            cell.accessoryType = .disclosureIndicator
+        } else {
+            cell.accessoryType = .none
+        }
         return cell
     }
 }
@@ -66,24 +83,43 @@ extension FileBrowserViewController: UITableViewDataSource {
 extension FileBrowserViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let contentName = manager.contents[indexPath.row]
-        let contentType = manager.contentType(for: contentName)
-        switch contentType {
-        case .directory:
-            let controller = FileBrowserViewController(directoryUrl: manager.url(for: contentName),
-                                                       showHiddenFiles: manager.showHiddenFiles)
+        let item = provider.items[indexPath.row]
+        switch item {
+        case let .directory(directory):
+            let controller = FileBrowserViewController(directory: directory,
+                                                       showHiddenFiles: provider.showHiddenFiles)
             navigationController?.pushViewController(controller, animated: true)
-        default:
-            let url = manager.url(for: contentName)
-            let controller = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        case let .file(file):
+            let controller = UIActivityViewController(activityItems: [file.url], applicationActivities: nil)
             present(controller, animated: true)
         }
+    }
+    
+    public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard provider.canDelete(at: indexPath.row) else { return nil }
+        let actions: [UIContextualAction] = [
+            UIContextualAction(style: .destructive, title: "删除", handler: { _, _, completion in
+                let deleteSuccess = self.provider.delete(at: indexPath.row)
+                if deleteSuccess {
+                    self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                }
+                completion(deleteSuccess)
+            })
+        ]
+        return UISwipeActionsConfiguration(actions: actions)
     }
 }
 
 extension FileBrowserViewController {
     private func setupViews() {
-        title = manager.currentDirectoryName
+        title = provider.currentDirectoryName
+        if navigationController?.viewControllers.count == 1 {
+            if #available(iOS 13.0, *) {
+                navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(close))
+            } else {
+                navigationItem.leftBarButtonItem = UIBarButtonItem(title: "关闭", style: .plain, target: self, action: #selector(close))
+            }
+        }
         navigationItem.backButtonTitle = "返回"
         
         tableView.ch.register(FileBrowserTableCell.self)
