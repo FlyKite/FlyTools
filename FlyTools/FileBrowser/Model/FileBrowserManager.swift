@@ -76,7 +76,7 @@ class SandboxBrowserManager: FileBrowserProvider {
         self.containers = containers
         self.showHiddenFiles = showHiddenFiles
         self.items = containers.map { container in
-            return .directory(Directory(url: URL(fileURLWithPath: container.path), name: container.name))
+            return .directory(Directory(url: container.url, name: container.name))
         }
     }
     

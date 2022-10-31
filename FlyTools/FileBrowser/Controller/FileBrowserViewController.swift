@@ -9,16 +9,6 @@ import UIKit
 import SnapKit
 import FlyUtils
 
-public struct SandboxContainer {
-    public let name: String
-    public let path: String
-    
-    public init(name: String, path: String) {
-        self.name = name
-        self.path = path
-    }
-}
-
 public class FileBrowserViewController: UIViewController {
     
     private let provider: FileBrowserProvider
@@ -63,7 +53,7 @@ extension FileBrowserViewController: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.ch.dequeueReusableCell(FileBrowserTableCell.self, for: indexPath)
+        let cell = tableView.fl.dequeueReusableCell(FileBrowserTableCell.self, for: indexPath)
         let item = provider.items[indexPath.row]
         if #available(iOS 13.0, *) {
             cell.icon = item.icon
@@ -122,7 +112,7 @@ extension FileBrowserViewController {
         }
         navigationItem.backButtonTitle = "返回"
         
-        tableView.ch.register(FileBrowserTableCell.self)
+        tableView.fl.register(FileBrowserTableCell.self)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)

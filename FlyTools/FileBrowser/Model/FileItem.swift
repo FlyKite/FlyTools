@@ -7,9 +7,14 @@
 
 import UIKit
 
-enum FileItem {
-    case directory(_ directory: Directory)
-    case file(_ file: File)
+public struct SandboxContainer {
+    public let name: String
+    public let url: URL
+    
+    public init(name: String, url: URL) {
+        self.name = name
+        self.url = url
+    }
 }
 
 public struct Directory {
@@ -20,6 +25,11 @@ public struct Directory {
         self.url = url
         self.name = name ?? url.lastPathComponent
     }
+}
+
+enum FileItem {
+    case directory(_ directory: Directory)
+    case file(_ file: File)
 }
 
 class File {
