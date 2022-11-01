@@ -14,21 +14,21 @@ public class FlyTools {
     private static var window: UIWindow?
     
     @available(iOS 13.0, *)
-    public static func showFlyBall(windowScene: UIWindowScene) {
+    public static func showFlyMonitor(windowScene: UIWindowScene) {
         guard windowScene != self.windowScene else { return }
         let window = FlyToolsWindow(windowScene: windowScene)
         window.windowLevel = .alert
-        window.rootViewController = FlyBallViewController()
+        window.rootViewController = FlyMonitorViewController()
         window.makeKeyAndVisible()
         self.window = window
         self.windowScene = windowScene
     }
     
-    @available(iOS, deprecated: 13.0, message: "Use showFlyBall(windowScene:) to provide a UIWindowScene above iOS 13.0")
-    public static func showFlyBall() {
+    @available(iOS, deprecated: 13.0, message: "Use showFlyMonitor(windowScene:) to provide a UIWindowScene above iOS 13.0")
+    public static func showFlyMonitor() {
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.windowLevel = .alert
-        window.rootViewController = FlyBallViewController()
+        window.rootViewController = FlyMonitorViewController()
         window.makeKeyAndVisible()
         self.window = window
     }
