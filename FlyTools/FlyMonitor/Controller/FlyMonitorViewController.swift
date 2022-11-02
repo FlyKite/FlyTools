@@ -59,8 +59,8 @@ class FlyMonitorViewController: UIViewController {
         view.layoutIfNeeded()
         let state = monitor.state.next
         let size = state.size
-        let x = monitor.center.x > view.bounds.width / 2 ? maximumMonitorX() : minimumMonitorX()
-        let y = minimumMonitorY()
+        let x = monitor.center.x > view.bounds.width / 2 ? maximumMonitorX(monitorWidth: size.width) : minimumMonitorX()
+        let y = min(monitor.frame.origin.y, maximumMonitorY(monitorHeight: size.height))
         UIView.animate(withDuration: 0.25, delay: 0) {
             self.monitor.state = state
             self.monitor.frame = CGRect(x: x, y: y, width: size.width, height: size.height)
@@ -91,16 +91,18 @@ class FlyMonitorViewController: UIViewController {
         return max(view.safeAreaInsets.left, monitorEdgeMargin)
     }
     
-    private func maximumMonitorX() -> CGFloat {
-        return view.bounds.width - monitor.frame.width - max(view.safeAreaInsets.right, monitorEdgeMargin)
+    private func maximumMonitorX(monitorWidth: CGFloat? = nil) -> CGFloat {
+        let width = monitorWidth ?? monitor.frame.width
+        return view.bounds.width - width - max(view.safeAreaInsets.right, monitorEdgeMargin)
     }
     
     private func minimumMonitorY() -> CGFloat {
         return max(view.safeAreaInsets.top, monitorEdgeMargin)
     }
     
-    private func maximumMonitorY() -> CGFloat {
-        return view.bounds.height - monitor.frame.height - max(view.safeAreaInsets.bottom, monitorEdgeMargin)
+    private func maximumMonitorY(monitorHeight: CGFloat? = nil) -> CGFloat {
+        let monitorHeight = monitorHeight ?? monitor.frame.height
+        return view.bounds.height - monitorHeight - max(view.safeAreaInsets.bottom, monitorEdgeMargin)
     }
 }
 
