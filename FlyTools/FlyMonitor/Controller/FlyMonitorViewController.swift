@@ -9,6 +9,17 @@ import UIKit
 
 class FlyMonitorViewController: UIViewController {
     
+    let sandboxContianers: [SandboxContainer]?
+    
+    init(sandboxContainers: [SandboxContainer]?) {
+        self.sandboxContianers = sandboxContainers
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private let monitor: FlyMonitor = FlyMonitor()
     
     private let monitorEdgeMargin: CGFloat = 2
@@ -110,7 +121,17 @@ extension FlyMonitorViewController: FlyMonitorDelegate {
     func flyMonitor(_ monitor: FlyMonitor, actionButtonClick actionType: ActionType) {
         switch actionType {
         case .fileBrowser:
-            let controller = FileBrowserViewController()
+            let controller = {
+                if let containers = sandboxContianers {
+                    return FileBrowserViewController(containers: containers)
+                } else {
+                    return FileBrowserViewController()
+                }
+            }()
+            let nav = UINavigationController(rootViewController: controller)
+            present(nav, animated: true)
+        case .network:
+            let controller = NetworkCatcherViewController()
             let nav = UINavigationController(rootViewController: controller)
             present(nav, animated: true)
         case .toggleMonitor:

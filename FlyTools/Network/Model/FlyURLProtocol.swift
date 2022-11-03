@@ -1,45 +1,65 @@
 //
-//  FlyNetworkCatcher.swift
+//  FlyURLProtocol.swift
 //  FlyTools
 //
-//  Created by FlyKite on 2022/10/27.
+//  Created by FlyKite on 2022/11/3.
 //
 
 import Foundation
 
-public protocol FlyNetworkCatcherDelegate: AnyObject {
-    func networkCatcher(_ catcher: FlyNetworkCatcher, canAuthenticateAgainstProtectionSpace: URLProtectionSpace) -> Bool
-    func networkCatcher(_ catcher: FlyNetworkCatcher, didReceiveAuthenticationChallenge: URLAuthenticationChallenge)
-    func networkCatcher(_ catcher: FlyNetworkCatcher, didCancelAuthenticationChallenge: URLAuthenticationChallenge)
+protocol FlyURLProtocolDelegate: AnyObject {
+    func urlProtocol(_ urlProtocol: FlyURLProtocol, didStartLoading task: URLSessionTask)
+    func urlProtocol(_ urlProtocol: FlyURLProtocol, canAuthenticateAgainstProtectionSpace: URLProtectionSpace) -> Bool
+    func urlProtocol(_ urlProtocol: FlyURLProtocol, didReceiveAuthenticationChallenge: URLAuthenticationChallenge)
+    func urlProtocol(_ urlProtocol: FlyURLProtocol, didCancelAuthenticationChallenge: URLAuthenticationChallenge)
+    func urlProtocol(_ urlProtocol: FlyURLProtocol, task: URLSessionTask, didReceiveResponse response: HTTPURLResponse)
 }
 
-extension FlyNetworkCatcherDelegate {
-    func networkCatcher(_ catcher: FlyNetworkCatcher, canAuthenticateAgainstProtectionSpace: URLProtectionSpace) -> Bool {
+extension FlyURLProtocolDelegate {
+    func urlProtocol(_ urlProtocol: FlyURLProtocol, canAuthenticateAgainstProtectionSpace: URLProtectionSpace) -> Bool {
         return false
     }
-    func networkCatcher(_ catcher: FlyNetworkCatcher, didReceiveAuthenticationChallenge: URLAuthenticationChallenge) { }
-    func networkCatcher(_ catcher: FlyNetworkCatcher, didCancelAuthenticationChallenge: URLAuthenticationChallenge) { }
+    func urlProtocol(_ urlProtocol: FlyURLProtocol, didReceiveAuthenticationChallenge: URLAuthenticationChallenge) { }
+    func urlProtocol(_ urlProtocol: FlyURLProtocol, didCancelAuthenticationChallenge: URLAuthenticationChallenge) { }
 }
 
-public class FlyNetworkCatcher: URLProtocol {
+class FlyURLProtocol: URLProtocol {
     
-    public static weak var delegate: FlyNetworkCatcherDelegate?
+    static weak var delegate: FlyURLProtocolDelegate?
     
-    public static var fetchDomains: [String] = []
+    static var fetchDomains: [String] = []
     
-    public static var catchingSchemes: [String] = ["http", "https"]
+    static var catchingSchemes: [String] = ["http", "https"]
     
-    public static func start() {
-        URLProtocol.registerClass(self)
-        FlySessionConfigurationHook.shared.exchangeSessionConfigurationImplementations()
+    static var isStarted: Bool { isStartedQueue.sync { innerIsStarted } }
+    private static var innerIsStarted: Bool = false
+    private static var isRegistered: Bool = false
+    private static let isStartedQueue: DispatchQueue = DispatchQueue(label: "com.FlyKite.FlyURLProtocol.isStarted")
+    
+    static func register() {
+        isStartedQueue.async(flags: .barrier) {
+            guard !self.isRegistered else { return }
+            self.isRegistered = true
+            URLProtocol.registerClass(self)
+            FlySessionConfigurationHook.shared.exchangeSessionConfigurationImplementations()
+        }
     }
     
-    public static func stop() {
-        URLProtocol.unregisterClass(self)
+    static func start() {
+        isStartedQueue.async(flags: .barrier) {
+            self.innerIsStarted = true
+        }
     }
     
-    public override class func canInit(with request: URLRequest) -> Bool {
+    static func stop() {
+        isStartedQueue.async(flags: .barrier) {
+            self.innerIsStarted = false
+        }
+    }
+    
+    override class func canInit(with request: URLRequest) -> Bool {
         guard
+            isStarted,
             let url = request.url,
             let scheme = url.scheme,
             catchingSchemes.contains(where: { $0.lowercased() == scheme.lowercased() }),
@@ -54,40 +74,40 @@ public class FlyNetworkCatcher: URLProtocol {
         return false
     }
     
-    public override class func canInit(with task: URLSessionTask) -> Bool {
+    override class func canInit(with task: URLSessionTask) -> Bool {
+        guard isStarted else { return false }
         if let request = task.currentRequest {
             return canInit(with: request)
         }
         return false
     }
     
-    public override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
         return request
     }
     
     private struct Constant {
-        static let recursiveRequestKey: String = "com.FlyKite.FlyTools.FlyNetworkCatcher"
+        static let recursiveRequestKey: String = "com.FlyKite.FlyTools.FlyURLProtocol"
     }
     
     private var modes: [RunLoop.Mode] = []
     private var startTime: TimeInterval = 0
-    private var clientThread: Thread = .main
     private var dataTask: URLSessionDataTask?
     
-    private var delegate: FlyNetworkCatcherDelegate? { FlyNetworkCatcher.delegate }
+    private var delegate: FlyURLProtocolDelegate? { FlyURLProtocol.delegate }
     
-    public private(set) var pendingChallenge: URLAuthenticationChallenge?
+    private(set) var pendingChallenge: URLAuthenticationChallenge?
     private var pendingChallengeCompletionHandler: ((URLSession.AuthChallengeDisposition, URLCredential?) -> Void)?
     
-    public override var task: URLSessionTask? {
+    override var task: URLSessionTask? {
         return dataTask
     }
     
-    public override init(request: URLRequest, cachedResponse: CachedURLResponse?, client: URLProtocolClient?) {
+    override init(request: URLRequest, cachedResponse: CachedURLResponse?, client: URLProtocolClient?) {
         super.init(request: request, cachedResponse: cachedResponse, client: client)
     }
     
-    public override func startLoading() {
+    override func startLoading() {
         var calculatedModes: [RunLoop.Mode] = [.default]
         let currentMode = RunLoop.current.currentMode
         if let currentMode = currentMode, currentMode != .default {
@@ -96,18 +116,18 @@ public class FlyNetworkCatcher: URLProtocol {
         modes = calculatedModes
         var recursiveRequest = request
         if let request = (recursiveRequest as NSURLRequest).copy() as? NSMutableURLRequest {
-            FlyNetworkCatcher.setProperty(true, forKey: Constant.recursiveRequestKey, in: request)
+            FlyURLProtocol.setProperty(true, forKey: Constant.recursiveRequestKey, in: request)
             recursiveRequest = request as URLRequest
         }
         startTime = Date.timeIntervalSinceReferenceDate
-        clientThread = Thread.current
         
         let task = FlyURLSessionDemux.shared.dataTask(recursiveRequest, delegate: self, modes: modes)
         dataTask = task
+        delegate?.urlProtocol(self, didStartLoading: task)
         task.resume()
     }
     
-    public override func stopLoading() {
+    override func stopLoading() {
         cancelPendingChallenge()
         if let task = dataTask {
             task.cancel()
@@ -120,7 +140,7 @@ public class FlyNetworkCatcher: URLProtocol {
             guard let challenge = self.pendingChallenge else { return }
             self.pendingChallenge = nil
             self.pendingChallengeCompletionHandler = nil
-            self.delegate?.networkCatcher(self, didCancelAuthenticationChallenge: challenge)
+            self.delegate?.urlProtocol(self, didCancelAuthenticationChallenge: challenge)
         }
     }
     
@@ -132,7 +152,7 @@ public class FlyNetworkCatcher: URLProtocol {
                 if let delegate = self.delegate {
                     self.pendingChallenge = challenge
                     self.pendingChallengeCompletionHandler = completionHandler
-                    delegate.networkCatcher(self, didReceiveAuthenticationChallenge: challenge)
+                    delegate.urlProtocol(self, didReceiveAuthenticationChallenge: challenge)
                 } else {
                     completionHandler(.cancelAuthenticationChallenge, nil)
                 }
@@ -141,11 +161,11 @@ public class FlyNetworkCatcher: URLProtocol {
     }
 }
 
-extension FlyNetworkCatcher: URLSessionDataDelegate {
+extension FlyURLProtocol: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
         var redirectRequest = request
         if let request = (redirectRequest as NSURLRequest).copy() as? NSMutableURLRequest {
-            FlyNetworkCatcher.removeProperty(forKey: Constant.recursiveRequestKey, in: request)
+            FlyURLProtocol.removeProperty(forKey: Constant.recursiveRequestKey, in: request)
             redirectRequest = request as URLRequest
         }
         client?.urlProtocol(self, wasRedirectedTo: redirectRequest, redirectResponse: response)
@@ -154,7 +174,7 @@ extension FlyNetworkCatcher: URLSessionDataDelegate {
     }
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        let result = delegate?.networkCatcher(self, canAuthenticateAgainstProtectionSpace: challenge.protectionSpace) ?? false
+        let result = delegate?.urlProtocol(self, canAuthenticateAgainstProtectionSpace: challenge.protectionSpace) ?? false
         
         if result {
             didReceive(challenge: challenge, completionHandler: completionHandler)
@@ -167,6 +187,7 @@ extension FlyNetworkCatcher: URLSessionDataDelegate {
         
         let policy: URLCache.StoragePolicy
         if let response = response as? HTTPURLResponse {
+            delegate?.urlProtocol(self, task: dataTask, didReceiveResponse: response)
             policy = cacheStoragePolicy(for: dataTask.originalRequest, response: response)
         } else {
             policy = .notAllowed
@@ -196,7 +217,7 @@ extension FlyNetworkCatcher: URLSessionDataDelegate {
     }
 }
 
-extension FlyNetworkCatcher {
+extension FlyURLProtocol {
     private func cacheStoragePolicy(for request: URLRequest?, response: HTTPURLResponse) -> URLCache.StoragePolicy {
         var cacheable: Bool
         let result: URLCache.StoragePolicy

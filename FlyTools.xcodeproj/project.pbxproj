@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		428AEB4129124F5400AFA84E /* FlySessionConfigurationHook.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428AEB4029124F5400AFA84E /* FlySessionConfigurationHook.swift */; };
 		428AEB432912528600AFA84E /* FlyURLSessionDemux.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428AEB422912528600AFA84E /* FlyURLSessionDemux.swift */; };
+		428AEB45291359D000AFA84E /* NetworkCatcherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428AEB44291359D000AFA84E /* NetworkCatcherViewController.swift */; };
+		428AEB4A29135D2B00AFA84E /* NetworkRequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428AEB4929135D2B00AFA84E /* NetworkRequestCell.swift */; };
+		428AEB4C291361BE00AFA84E /* FlyURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428AEB4B291361BE00AFA84E /* FlyURLProtocol.swift */; };
 		42C211012907C96600105DCB /* FlyMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C211002907C96600105DCB /* FlyMonitor.swift */; };
 		42C21103290A906D00105DCB /* FlyTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C21102290A906D00105DCB /* FlyTools.swift */; };
 		42C21109290AA2FC00105DCB /* FlyNetworkCatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C21108290AA2FC00105DCB /* FlyNetworkCatcher.swift */; };
@@ -27,6 +30,9 @@
 		0B75FB94BAA0893AB2400D30 /* Pods-FlyTools.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FlyTools.release.xcconfig"; path = "Target Support Files/Pods-FlyTools/Pods-FlyTools.release.xcconfig"; sourceTree = "<group>"; };
 		428AEB4029124F5400AFA84E /* FlySessionConfigurationHook.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlySessionConfigurationHook.swift; sourceTree = "<group>"; };
 		428AEB422912528600AFA84E /* FlyURLSessionDemux.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyURLSessionDemux.swift; sourceTree = "<group>"; };
+		428AEB44291359D000AFA84E /* NetworkCatcherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkCatcherViewController.swift; sourceTree = "<group>"; };
+		428AEB4929135D2B00AFA84E /* NetworkRequestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequestCell.swift; sourceTree = "<group>"; };
+		428AEB4B291361BE00AFA84E /* FlyURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyURLProtocol.swift; sourceTree = "<group>"; };
 		42C211002907C96600105DCB /* FlyMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyMonitor.swift; sourceTree = "<group>"; };
 		42C21102290A906D00105DCB /* FlyTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyTools.swift; sourceTree = "<group>"; };
 		42C21108290AA2FC00105DCB /* FlyNetworkCatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyNetworkCatcher.swift; sourceTree = "<group>"; };
@@ -70,6 +76,33 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		428AEB46291359FE00AFA84E /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				428AEB44291359D000AFA84E /* NetworkCatcherViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		428AEB4729135D0A00AFA84E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				42C21108290AA2FC00105DCB /* FlyNetworkCatcher.swift */,
+				428AEB4B291361BE00AFA84E /* FlyURLProtocol.swift */,
+				428AEB4029124F5400AFA84E /* FlySessionConfigurationHook.swift */,
+				428AEB422912528600AFA84E /* FlyURLSessionDemux.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		428AEB4829135D1000AFA84E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				428AEB4929135D2B00AFA84E /* NetworkRequestCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		42C210FF2907C95800105DCB /* FlyMonitor */ = {
 			isa = PBXGroup;
 			children = (
@@ -83,9 +116,9 @@
 		42C21107290AA2D100105DCB /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				42C21108290AA2FC00105DCB /* FlyNetworkCatcher.swift */,
-				428AEB4029124F5400AFA84E /* FlySessionConfigurationHook.swift */,
-				428AEB422912528600AFA84E /* FlyURLSessionDemux.swift */,
+				428AEB46291359FE00AFA84E /* Controller */,
+				428AEB4829135D1000AFA84E /* View */,
+				428AEB4729135D0A00AFA84E /* Model */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -286,12 +319,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				42D8881029078A3400FD8E76 /* FileItem.swift in Sources */,
+				428AEB4C291361BE00AFA84E /* FlyURLProtocol.swift in Sources */,
 				42C2110D2910CDFB00105DCB /* DeviceUsage.swift in Sources */,
+				428AEB45291359D000AFA84E /* NetworkCatcherViewController.swift in Sources */,
 				42D887F329067BC900FD8E76 /* FileBrowserTableCell.swift in Sources */,
 				428AEB432912528600AFA84E /* FlyURLSessionDemux.swift in Sources */,
 				42D887F52906853400FD8E76 /* FileBrowserManager.swift in Sources */,
 				42C2110B290BBCB100105DCB /* FlyMonitorViewController.swift in Sources */,
 				42D887EB29067B0500FD8E76 /* FileBrowserViewController.swift in Sources */,
+				428AEB4A29135D2B00AFA84E /* NetworkRequestCell.swift in Sources */,
 				42C211012907C96600105DCB /* FlyMonitor.swift in Sources */,
 				428AEB4129124F5400AFA84E /* FlySessionConfigurationHook.swift in Sources */,
 				42C21103290A906D00105DCB /* FlyTools.swift in Sources */,
