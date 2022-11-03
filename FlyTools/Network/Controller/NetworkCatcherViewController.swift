@@ -6,11 +6,12 @@
 //
 
 import UIKit
+import FlyUtils
 
 class NetworkCatcherViewController: UIViewController {
     
     private let tableView: UITableView = UITableView()
-    private var catchedRequestCount: Int = 0
+    @ThreadSafe private var catchedRequestCount: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,6 +20,12 @@ class NetworkCatcherViewController: UIViewController {
     
     @objc private func close() {
         navigationController?.dismiss(animated: true)
+    }
+    
+    @objc private func clear() {
+        FlyNetworkCatcher.shared.removeAllCatchedRequests()
+        catchedRequestCount = 0
+        tableView.reloadData()
     }
 }
 
@@ -38,13 +45,19 @@ extension NetworkCatcherViewController: UITableViewDataSource {
 extension NetworkCatcherViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
+        guard indexPath.row < FlyNetworkCatcher.shared.catchedRequests.count else { return }
+        let requestInfo = FlyNetworkCatcher.shared.catchedRequests[indexPath.row]
+        let controller = NetworkRequestInfoViewController(requestInfo: requestInfo)
+        navigationController?.pushViewController(controller, animated: true)
     }
     
     public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let actions: [UIContextualAction] = [
             UIContextualAction(style: .destructive, title: "删除", handler: { _, _, completion in
-                completion(false)
+                FlyNetworkCatcher.shared.removeCatchedRequest(at: indexPath.row)
+                self._catchedRequestCount.transformValue { $0 -= 1 }
+                self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                completion(true)
             })
         ]
         return UISwipeActionsConfiguration(actions: actions)
@@ -53,7 +66,7 @@ extension NetworkCatcherViewController: UITableViewDelegate {
 
 extension NetworkCatcherViewController: FlyNetworkCatcherDelegate {
     func networkCatcher(_ catcher: FlyNetworkCatcher, didCatchNewRequest: NetworkRequestInfo) {
-        catchedRequestCount += 1
+        _catchedRequestCount.transformValue { $0 += 1 }
         tableView.insertRows(at: [IndexPath(row: catchedRequestCount - 1, section: 0)], with: .automatic)
     }
 }
@@ -61,12 +74,12 @@ extension NetworkCatcherViewController: FlyNetworkCatcherDelegate {
 extension NetworkCatcherViewController {
     private func setupViews() {
         title = "网络"
-        if navigationController?.viewControllers.count == 1 {
-            if #available(iOS 13.0, *) {
-                navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(close))
-            } else {
-                navigationItem.leftBarButtonItem = UIBarButtonItem(title: "关闭", style: .plain, target: self, action: #selector(close))
-            }
+        if #available(iOS 13.0, *) {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(close))
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(clear))
+        } else {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "关闭", style: .plain, target: self, action: #selector(close))
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "清空", style: .plain, target: self, action: #selector(clear))
         }
         navigationItem.backButtonTitle = "返回"
         

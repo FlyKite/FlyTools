@@ -12,6 +12,10 @@
 		428AEB45291359D000AFA84E /* NetworkCatcherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428AEB44291359D000AFA84E /* NetworkCatcherViewController.swift */; };
 		428AEB4A29135D2B00AFA84E /* NetworkRequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428AEB4929135D2B00AFA84E /* NetworkRequestCell.swift */; };
 		428AEB4C291361BE00AFA84E /* FlyURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428AEB4B291361BE00AFA84E /* FlyURLProtocol.swift */; };
+		428AEB562913ACD300AFA84E /* NetworkRequestInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428AEB552913ACD300AFA84E /* NetworkRequestInfoViewController.swift */; };
+		428AEB582913AF3C00AFA84E /* TitleValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428AEB572913AF3C00AFA84E /* TitleValueCell.swift */; };
+		428AEB5C2913B2EE00AFA84E /* HeaderTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428AEB5B2913B2EE00AFA84E /* HeaderTitleView.swift */; };
+		428AEB5E2913B39B00AFA84E /* ValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428AEB5D2913B39B00AFA84E /* ValueCell.swift */; };
 		42C211012907C96600105DCB /* FlyMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C211002907C96600105DCB /* FlyMonitor.swift */; };
 		42C21103290A906D00105DCB /* FlyTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C21102290A906D00105DCB /* FlyTools.swift */; };
 		42C21109290AA2FC00105DCB /* FlyNetworkCatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C21108290AA2FC00105DCB /* FlyNetworkCatcher.swift */; };
@@ -33,6 +37,10 @@
 		428AEB44291359D000AFA84E /* NetworkCatcherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkCatcherViewController.swift; sourceTree = "<group>"; };
 		428AEB4929135D2B00AFA84E /* NetworkRequestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequestCell.swift; sourceTree = "<group>"; };
 		428AEB4B291361BE00AFA84E /* FlyURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyURLProtocol.swift; sourceTree = "<group>"; };
+		428AEB552913ACD300AFA84E /* NetworkRequestInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequestInfoViewController.swift; sourceTree = "<group>"; };
+		428AEB572913AF3C00AFA84E /* TitleValueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleValueCell.swift; sourceTree = "<group>"; };
+		428AEB5B2913B2EE00AFA84E /* HeaderTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderTitleView.swift; sourceTree = "<group>"; };
+		428AEB5D2913B39B00AFA84E /* ValueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueCell.swift; sourceTree = "<group>"; };
 		42C211002907C96600105DCB /* FlyMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyMonitor.swift; sourceTree = "<group>"; };
 		42C21102290A906D00105DCB /* FlyTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyTools.swift; sourceTree = "<group>"; };
 		42C21108290AA2FC00105DCB /* FlyNetworkCatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyNetworkCatcher.swift; sourceTree = "<group>"; };
@@ -80,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				428AEB44291359D000AFA84E /* NetworkCatcherViewController.swift */,
+				428AEB552913ACD300AFA84E /* NetworkRequestInfoViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -99,6 +108,9 @@
 			isa = PBXGroup;
 			children = (
 				428AEB4929135D2B00AFA84E /* NetworkRequestCell.swift */,
+				428AEB5D2913B39B00AFA84E /* ValueCell.swift */,
+				428AEB572913AF3C00AFA84E /* TitleValueCell.swift */,
+				428AEB5B2913B2EE00AFA84E /* HeaderTitleView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -325,12 +337,16 @@
 				42D887F329067BC900FD8E76 /* FileBrowserTableCell.swift in Sources */,
 				428AEB432912528600AFA84E /* FlyURLSessionDemux.swift in Sources */,
 				42D887F52906853400FD8E76 /* FileBrowserManager.swift in Sources */,
+				428AEB5E2913B39B00AFA84E /* ValueCell.swift in Sources */,
 				42C2110B290BBCB100105DCB /* FlyMonitorViewController.swift in Sources */,
 				42D887EB29067B0500FD8E76 /* FileBrowserViewController.swift in Sources */,
+				428AEB5C2913B2EE00AFA84E /* HeaderTitleView.swift in Sources */,
 				428AEB4A29135D2B00AFA84E /* NetworkRequestCell.swift in Sources */,
 				42C211012907C96600105DCB /* FlyMonitor.swift in Sources */,
 				428AEB4129124F5400AFA84E /* FlySessionConfigurationHook.swift in Sources */,
+				428AEB562913ACD300AFA84E /* NetworkRequestInfoViewController.swift in Sources */,
 				42C21103290A906D00105DCB /* FlyTools.swift in Sources */,
+				428AEB582913AF3C00AFA84E /* TitleValueCell.swift in Sources */,
 				42C21109290AA2FC00105DCB /* FlyNetworkCatcher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

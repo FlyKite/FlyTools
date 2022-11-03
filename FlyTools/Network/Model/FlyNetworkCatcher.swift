@@ -42,20 +42,28 @@ public class FlyNetworkCatcher {
     private init() {
         FlyURLProtocol.delegate = self
     }
+    
+    public func removeCatchedRequest(at index: Int) {
+        _catchedRequests.transformValue { requests in
+            requests.remove(at: index)
+        }
+    }
+    
+    public func removeAllCatchedRequests() {
+        _catchedRequests.transformValue { requests in
+            requests = []
+        }
+    }
 }
 
 extension FlyNetworkCatcher: FlyURLProtocolDelegate {
     func urlProtocol(_ urlProtocol: FlyURLProtocol, didStartLoading task: URLSessionTask) {
         let requestInfo = NetworkRequestInfo(request: urlProtocol.request, beginDate: Date())
         _catchedRequests.transformValue { list in
-            var list = list
             list.append(requestInfo)
-            return list
         }
         _requestMap.transformValue { map in
-            var map = map
             map[task.taskIdentifier] = requestInfo
-            return map
         }
         delegate?.networkCatcher(self, didCatchNewRequest: requestInfo)
     }

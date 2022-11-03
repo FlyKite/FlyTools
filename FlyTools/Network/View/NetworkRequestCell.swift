@@ -91,10 +91,10 @@ class NetworkRequestCell: UITableViewCell {
         hostLabel.text = "host: \(requestInfo?.request.url?.host ?? "")"
         if let beginData = requestInfo?.beginDate {
             let fmt = DateFormatter()
-            fmt.dateFormat = "HH:mm:ss"
+            fmt.dateFormat = "HH:mm"
             startTimeTagView.textLabel.text = fmt.string(from: beginData)
         } else {
-            startTimeTagView.textLabel.text = "---"
+            startTimeTagView.textLabel.text = "--:--"
         }
         responseListener = requestInfo?.responseListenable.listen(onChange: { [weak self] response in
             guard let self = self else { return }
@@ -124,7 +124,7 @@ class NetworkRequestCell: UITableViewCell {
     
     private func updateCost(_ cost: TimeInterval?) {
         guard let cost = cost else {
-            costTagView.textLabel.text = "..."
+            costTagView.textLabel.text = "-"
             costTagView.backgroundColor = .systemGray
             return
         }
