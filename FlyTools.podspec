@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.authors = { 'FlyKite' => 'DogeFlyKite@gmail.com' }
   s.source = { :git => 'https://github.com/FlyKite/FlyTools.git', :tag => s.version }
 
-  s.ios.deployment_target = '13.0'
+  s.ios.deployment_target = '11.0'
 
   s.swift_versions = ['5']
 
