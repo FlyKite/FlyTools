@@ -138,6 +138,10 @@ extension FlyMonitorViewController: FlyMonitorDelegate {
             let controller = LogViewController()
             let nav = UINavigationController(rootViewController: controller)
             present(nav, animated: true)
+        case .snapshot:
+            guard let snapshot = SnapshotUtil.takeSnapshot() else { return }
+            let controller = SnapshotViewController(snapshot: snapshot)
+            present(controller, animated: true)
         case .toggleMonitor:
             toggleMonitor()
         default:
