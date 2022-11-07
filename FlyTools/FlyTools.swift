@@ -30,7 +30,7 @@ public class FlyTools {
                              logLevel: LogLevel = .info) {
         queue.sync {
             guard window == nil else { return }
-            let window = UIWindow(frame: UIScreen.main.bounds)
+            let window = FlyToolsWindow(frame: UIScreen.main.bounds)
             setup(window: window, sandboxContainers: sandboxContainers, logLevel: logLevel)
         }
     }
