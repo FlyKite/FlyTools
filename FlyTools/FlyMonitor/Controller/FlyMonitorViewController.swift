@@ -134,6 +134,10 @@ extension FlyMonitorViewController: FlyMonitorDelegate {
             let controller = NetworkCatcherViewController()
             let nav = UINavigationController(rootViewController: controller)
             present(nav, animated: true)
+        case .log:
+            let controller = LogViewController()
+            let nav = UINavigationController(rootViewController: controller)
+            present(nav, animated: true)
         case .toggleMonitor:
             toggleMonitor()
         default:

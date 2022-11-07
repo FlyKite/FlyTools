@@ -26,7 +26,7 @@ struct DeviceUsage {
             let memoryUsage = try getApplicationUsageOfMemory()
             return DeviceUsage(cpuUsage: cpuUsage, memoryUsage: memoryUsage)
         } catch {
-            print(error)
+            FlyTools.log(.verbose, message: "\(error)")
             return nil
         }
     }
