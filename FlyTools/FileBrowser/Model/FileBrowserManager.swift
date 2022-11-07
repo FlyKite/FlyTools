@@ -11,6 +11,7 @@ protocol FileBrowserProvider {
     var currentDirectoryName: String { get }
     var showHiddenFiles: Bool { get }
     var items: [FileItem] { get }
+    var error: Error? { get }
     
     func canDelete(at index: Int) -> Bool
     func delete(at index: Int) -> Bool
@@ -23,6 +24,7 @@ class DirectoryBrowserManager: FileBrowserProvider {
     let showHiddenFiles: Bool
     
     private(set) var items: [FileItem] = []
+    private(set) var error: Error?
     
     init(directory: Directory, showHiddenFiles: Bool) {
         self.directory = directory
@@ -43,7 +45,8 @@ class DirectoryBrowserManager: FileBrowserProvider {
                 return isDirectory.boolValue ? .directory(Directory(url: url)) : .file(File(url: url))
             }
         } catch {
-            print(error)
+            self.error = error
+            FlyTools.log(.verbose, message: "\(error)")
         }
     }
     
@@ -58,7 +61,7 @@ class DirectoryBrowserManager: FileBrowserProvider {
             items.remove(at: index)
             return true
         } catch {
-            print(error)
+            FlyTools.log(.verbose, message: "\(error)")
             return false
         }
     }
@@ -71,6 +74,7 @@ class SandboxBrowserManager: FileBrowserProvider {
     let showHiddenFiles: Bool
     
     let items: [FileItem]
+    var error: Error? { nil }
     
     init(containers: [SandboxContainer], showHiddenFiles: Bool) {
         self.containers = containers

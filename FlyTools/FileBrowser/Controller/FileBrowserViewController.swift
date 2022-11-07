@@ -14,6 +14,7 @@ public class FileBrowserViewController: UIViewController {
     private let provider: FileBrowserProvider
     
     private let tableView: UITableView = UITableView()
+    private let emptyLabel: UILabel = UILabel()
     
     public init(directory: Directory? = nil, showHiddenFiles: Bool = false) {
         if let directory = directory {
@@ -118,10 +119,27 @@ extension FileBrowserViewController {
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0)
         tableView.rowHeight = 52
         
+        emptyLabel.isHidden = !provider.items.isEmpty
+        emptyLabel.text = provider.error?.localizedDescription ?? "无内容"
+        if #available(iOS 13.0, *) {
+            emptyLabel.textColor = .secondaryLabel
+        } else {
+            emptyLabel.textColor = .systemGray
+        }
+        emptyLabel.textAlignment = .center
+        emptyLabel.numberOfLines = 0
+        
         view.addSubview(tableView)
+        view.addSubview(emptyLabel)
         
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+        
+        emptyLabel.snp.makeConstraints { make in
+            make.left.equalTo(view.safeAreaLayoutGuide).offset(16)
+            make.right.equalTo(view.safeAreaLayoutGuide).offset(-16)
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
 }
