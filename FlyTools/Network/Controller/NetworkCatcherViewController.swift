@@ -67,7 +67,10 @@ extension NetworkCatcherViewController: UITableViewDelegate {
 extension NetworkCatcherViewController: FlyNetworkCatcherDelegate {
     func networkCatcher(_ catcher: FlyNetworkCatcher, didCatchNewRequest: NetworkRequestInfo) {
         _catchedRequestCount.transformValue { $0 += 1 }
-        tableView.insertRows(at: [IndexPath(row: catchedRequestCount - 1, section: 0)], with: .automatic)
+        let indexPath = IndexPath(row: self.catchedRequestCount - 1, section: 0)
+        DispatchQueue.main.async {
+            self.tableView.insertRows(at: [indexPath], with: .automatic)
+        }
     }
 }
 

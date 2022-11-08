@@ -11,7 +11,7 @@ public class FlyTools {
     
     @available(iOS 13.0, *)
     private static var windowScene: UIWindowScene?
-    private static var window: UIWindow?
+    private static var window: FlyToolsWindow?
     private static let queue: DispatchQueue = DispatchQueue(label: "com.FlyKite.FlyTools")
     
     @available(iOS 13.0, *)
@@ -35,7 +35,7 @@ public class FlyTools {
         }
     }
     
-    private static func setup(window: UIWindow, sandboxContainers: [SandboxContainer]?, logLevel: LogLevel) {
+    private static func setup(window: FlyToolsWindow, sandboxContainers: [SandboxContainer]?, logLevel: LogLevel) {
         _ = FlyNetworkCatcher.shared
         FlyURLProtocol.register()
         FlyURLProtocol.start()
