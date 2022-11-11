@@ -1,5 +1,5 @@
 //
-//  SnapshotUtil.swift
+//  ScreenshotUtil.swift
 //  FlyTools
 //
 //  Created by FlyKite on 2022/11/7.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-class SnapshotUtil {
-    static func takeSnapshot() -> UIImage? {
+class ScreenshotUtil {
+    static func takeScreenshot() -> UIImage? {
         var scale: CGFloat = 3.0
         var windows: [UIWindow]?
         if #available(iOS 13.0, *) {
@@ -33,11 +33,10 @@ class SnapshotUtil {
             height = max(height, window.frame.maxY)
         }
         UIGraphicsBeginImageContextWithOptions(CGSize(width: width, height: height), false, scale)
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
         for window in windows {
-//            if window is FlyToolsWindow {
-//                continue
-//            }
+            if window is FlyToolsWindow {
+                continue
+            }
             window.drawHierarchy(in: window.frame, afterScreenUpdates: true)
         }
         let image = UIGraphicsGetImageFromCurrentImageContext()

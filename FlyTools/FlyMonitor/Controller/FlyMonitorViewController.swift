@@ -42,6 +42,14 @@ class FlyMonitorViewController: UIViewController {
         super.viewDidLoad()
         setupViews()
         startUsageTimer()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(takeScreenshot), name: UIApplication.userDidTakeScreenshotNotification, object: nil)
+    }
+    
+    @objc private func takeScreenshot() {
+        guard let screenshot = ScreenshotUtil.takeScreenshot() else { return }
+        let controller = ScreenshotViewController(screenshot: screenshot)
+        present(controller, animated: true)
     }
     
     private func startUsageTimer() {
@@ -138,9 +146,9 @@ extension FlyMonitorViewController: FlyMonitorDelegate {
             let controller = LogViewController()
             let nav = UINavigationController(rootViewController: controller)
             present(nav, animated: true)
-        case .snapshot:
-            guard let snapshot = SnapshotUtil.takeSnapshot() else { return }
-            let controller = SnapshotViewController(snapshot: snapshot)
+        case .screenshot:
+            guard let screenshot = ScreenshotUtil.takeScreenshot() else { return }
+            let controller = ScreenshotViewController(screenshot: screenshot)
             present(controller, animated: true)
         case .toggleMonitor:
             toggleMonitor()

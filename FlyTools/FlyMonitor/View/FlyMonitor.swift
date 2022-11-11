@@ -12,7 +12,7 @@ enum ActionType: CaseIterable {
     case network
     case log
     case location
-    case snapshot
+    case screenshot
     case ruler
     case info
     case toggleMonitor
@@ -289,7 +289,7 @@ extension ActionType {
         case .network: return UIImage(systemName: "network", withConfiguration: config)
         case .log: return UIImage(systemName: "doc.plaintext.fill", withConfiguration: config)
         case .location: return UIImage(systemName: "location.circle.fill", withConfiguration: config)
-        case .snapshot: return UIImage(systemName: "camera.fill", withConfiguration: config)
+        case .screenshot: return UIImage(systemName: "camera.fill", withConfiguration: config)
         case .ruler: return UIImage(systemName: "ruler.fill", withConfiguration: config)
         case .info: return UIImage(systemName: "info.circle.fill", withConfiguration: config)
         case .toggleMonitor: return UIImage(systemName: "xmark.circle.fill", withConfiguration: config)
@@ -302,7 +302,7 @@ extension ActionType {
         case .network: return "网络"
         case .log: return "日志"
         case .location: return "定位"
-        case .snapshot: return "截屏"
+        case .screenshot: return "截屏"
         case .ruler: return "测量"
         case .info: return "信息"
         case .toggleMonitor: return "折叠"

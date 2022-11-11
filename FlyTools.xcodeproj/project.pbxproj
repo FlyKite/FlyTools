@@ -20,8 +20,8 @@
 		428F89F9291504F200D07C9C /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428F89F8291504F200D07C9C /* Logger.swift */; };
 		428F89FB29150BCD00D07C9C /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428F89FA29150BCD00D07C9C /* LogViewController.swift */; };
 		428F89FD2918C30A00D07C9C /* LogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428F89FC2918C30A00D07C9C /* LogCell.swift */; };
-		428F8A012918F6A700D07C9C /* SnapshotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428F8A002918F6A700D07C9C /* SnapshotViewController.swift */; };
-		428F8A032918F6B800D07C9C /* SnapshotUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428F8A022918F6B800D07C9C /* SnapshotUtil.swift */; };
+		428F8A012918F6A700D07C9C /* ScreenshotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428F8A002918F6A700D07C9C /* ScreenshotViewController.swift */; };
+		428F8A032918F6B800D07C9C /* ScreenshotUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 428F8A022918F6B800D07C9C /* ScreenshotUtil.swift */; };
 		42C211012907C96600105DCB /* FlyMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C211002907C96600105DCB /* FlyMonitor.swift */; };
 		42C21103290A906D00105DCB /* FlyTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C21102290A906D00105DCB /* FlyTools.swift */; };
 		42C21109290AA2FC00105DCB /* FlyNetworkCatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C21108290AA2FC00105DCB /* FlyNetworkCatcher.swift */; };
@@ -51,8 +51,8 @@
 		428F89F8291504F200D07C9C /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		428F89FA29150BCD00D07C9C /* LogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
 		428F89FC2918C30A00D07C9C /* LogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogCell.swift; sourceTree = "<group>"; };
-		428F8A002918F6A700D07C9C /* SnapshotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotViewController.swift; sourceTree = "<group>"; };
-		428F8A022918F6B800D07C9C /* SnapshotUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotUtil.swift; sourceTree = "<group>"; };
+		428F8A002918F6A700D07C9C /* ScreenshotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotViewController.swift; sourceTree = "<group>"; };
+		428F8A022918F6B800D07C9C /* ScreenshotUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotUtil.swift; sourceTree = "<group>"; };
 		42C211002907C96600105DCB /* FlyMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyMonitor.swift; sourceTree = "<group>"; };
 		42C21102290A906D00105DCB /* FlyTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyTools.swift; sourceTree = "<group>"; };
 		42C21108290AA2FC00105DCB /* FlyNetworkCatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyNetworkCatcher.swift; sourceTree = "<group>"; };
@@ -162,13 +162,14 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		428F89FF2918F68C00D07C9C /* Snapshot */ = {
+		428F89FF2918F68C00D07C9C /* Screenshot */ = {
 			isa = PBXGroup;
 			children = (
-				428F8A002918F6A700D07C9C /* SnapshotViewController.swift */,
-				428F8A022918F6B800D07C9C /* SnapshotUtil.swift */,
+				42CF3969291E3F5E005AEA91 /* Controller */,
+				42CF396B291E3F6D005AEA91 /* View */,
+				42CF396A291E3F66005AEA91 /* Model */,
 			);
-			path = Snapshot;
+			path = Screenshot;
 			sourceTree = "<group>";
 		};
 		42C210FF2907C95800105DCB /* FlyMonitor */ = {
@@ -215,6 +216,29 @@
 			path = Controller;
 			sourceTree = "<group>";
 		};
+		42CF3969291E3F5E005AEA91 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				428F8A002918F6A700D07C9C /* ScreenshotViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		42CF396A291E3F66005AEA91 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				428F8A022918F6B800D07C9C /* ScreenshotUtil.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		42CF396B291E3F6D005AEA91 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		42D887D6290679E500FD8E76 = {
 			isa = PBXGroup;
 			children = (
@@ -242,7 +266,7 @@
 				42D887EC29067B3D00FD8E76 /* FileBrowser */,
 				42C21107290AA2D100105DCB /* Network */,
 				428F89D52914F19B00D07C9C /* Log */,
-				428F89FF2918F68C00D07C9C /* Snapshot */,
+				428F89FF2918F68C00D07C9C /* Screenshot */,
 			);
 			path = FlyTools;
 			sourceTree = "<group>";
@@ -391,7 +415,7 @@
 				42D8881029078A3400FD8E76 /* FileItem.swift in Sources */,
 				428AEB4C291361BE00AFA84E /* FlyURLProtocol.swift in Sources */,
 				42C2110D2910CDFB00105DCB /* DeviceUsage.swift in Sources */,
-				428F8A032918F6B800D07C9C /* SnapshotUtil.swift in Sources */,
+				428F8A032918F6B800D07C9C /* ScreenshotUtil.swift in Sources */,
 				428AEB45291359D000AFA84E /* NetworkCatcherViewController.swift in Sources */,
 				42D887F329067BC900FD8E76 /* FileBrowserTableCell.swift in Sources */,
 				428AEB432912528600AFA84E /* FlyURLSessionDemux.swift in Sources */,
@@ -411,7 +435,7 @@
 				42C21103290A906D00105DCB /* FlyTools.swift in Sources */,
 				428AEB582913AF3C00AFA84E /* TitleValueCell.swift in Sources */,
 				42C21109290AA2FC00105DCB /* FlyNetworkCatcher.swift in Sources */,
-				428F8A012918F6A700D07C9C /* SnapshotViewController.swift in Sources */,
+				428F8A012918F6A700D07C9C /* ScreenshotViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
