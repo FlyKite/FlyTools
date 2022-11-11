@@ -27,6 +27,7 @@
 		42C21109290AA2FC00105DCB /* FlyNetworkCatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C21108290AA2FC00105DCB /* FlyNetworkCatcher.swift */; };
 		42C2110B290BBCB100105DCB /* FlyMonitorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C2110A290BBCB100105DCB /* FlyMonitorViewController.swift */; };
 		42C2110D2910CDFB00105DCB /* DeviceUsage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C2110C2910CDFB00105DCB /* DeviceUsage.swift */; };
+		42CF397B291E4CD1005AEA91 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42CF397A291E4CD1005AEA91 /* Images.xcassets */; };
 		42D887E4290679E500FD8E76 /* FlyTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 42D887E3290679E500FD8E76 /* FlyTools.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42D887EB29067B0500FD8E76 /* FileBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D887EA29067B0500FD8E76 /* FileBrowserViewController.swift */; };
 		42D887F329067BC900FD8E76 /* FileBrowserTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D887F229067BC900FD8E76 /* FileBrowserTableCell.swift */; };
@@ -58,6 +59,7 @@
 		42C21108290AA2FC00105DCB /* FlyNetworkCatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyNetworkCatcher.swift; sourceTree = "<group>"; };
 		42C2110A290BBCB100105DCB /* FlyMonitorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlyMonitorViewController.swift; sourceTree = "<group>"; };
 		42C2110C2910CDFB00105DCB /* DeviceUsage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceUsage.swift; sourceTree = "<group>"; };
+		42CF397A291E4CD1005AEA91 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		42D887E0290679E500FD8E76 /* FlyTools.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlyTools.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42D887E3290679E500FD8E76 /* FlyTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlyTools.h; sourceTree = "<group>"; };
 		42D887EA29067B0500FD8E76 /* FileBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserViewController.swift; sourceTree = "<group>"; };
@@ -239,6 +241,14 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		42CF3972291E4380005AEA91 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				42CF397A291E4CD1005AEA91 /* Images.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		42D887D6290679E500FD8E76 = {
 			isa = PBXGroup;
 			children = (
@@ -262,6 +272,7 @@
 			children = (
 				42D887E3290679E500FD8E76 /* FlyTools.h */,
 				42C21102290A906D00105DCB /* FlyTools.swift */,
+				42CF3972291E4380005AEA91 /* Resources */,
 				42C210FF2907C95800105DCB /* FlyMonitor */,
 				42D887EC29067B3D00FD8E76 /* FileBrowser */,
 				42C21107290AA2D100105DCB /* Network */,
@@ -377,6 +388,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42CF397B291E4CD1005AEA91 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

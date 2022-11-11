@@ -17,18 +17,21 @@ class ScreenshotViewController: UIViewController {
     private let toolbox: UIStackView = UIStackView()
     
     enum ToolType: CaseIterable {
+        case addRect
         case close
         case save
         
-        var systemImageName: String {
+        var icon: UIImage? {
             switch self {
-            case .close: return "xmark"
-            case .save: return "checkmark"
+            case .addRect: return Images.addRect
+            case .close: return Images.close
+            case .save: return Images.confirm
             }
         }
         
         var tintColor: UIColor {
             switch self {
+            case .addRect: return .systemGray
             case .close: return .systemRed
             case .save: return .systemGreen
             }
@@ -113,7 +116,7 @@ extension ScreenshotViewController {
         for (index, type) in ToolType.allCases.enumerated() {
             let button = UIButton()
             if #available(iOS 13.0, *) {
-                button.setImage(UIImage(systemName: type.systemImageName), for: .normal)
+                button.setImage(type.icon, for: .normal)
             }
             button.tag = index
             button.tintColor = type.tintColor

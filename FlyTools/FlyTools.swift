@@ -59,3 +59,22 @@ class FlyToolsWindow: UIWindow {
         return view != self ? view : nil
     }
 }
+
+struct Images {
+    
+    static let addRect = image(named: "add_rect")
+    static let close = image(named: "close")
+    static let confirm = image(named: "confirm")
+    
+    typealias ImageResouce = (UIImage.RenderingMode?) -> UIImage?
+    
+    private static let imageBundle: Bundle? = {
+        guard let path = Bundle(for: FlyTools.self).path(forResource: "FlyToolsImages", ofType: "bundle") else { return nil }
+        return Bundle(path: path)
+    }()
+    
+    private static func image(named name: String) -> UIImage? {
+        guard let bundle = imageBundle else { return nil }
+        return UIImage(named: name, in: bundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+    }
+}
