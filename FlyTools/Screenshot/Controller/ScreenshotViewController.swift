@@ -18,20 +18,49 @@ class ScreenshotViewController: UIViewController {
     
     enum ToolType: CaseIterable {
         case addRect
+        case addLine
+        case pencil
+        case addText
+        case undo
+        case redo
         case close
         case save
         
+        @available(iOS 13.0, *)
         var icon: UIImage? {
             switch self {
-            case .addRect: return Images.addRect
-            case .close: return Images.close
-            case .save: return Images.confirm
+            case .addRect: return UIImage(systemName: "rectangle")
+            case .addLine: return UIImage(systemName: "line.diagonal")
+            case .pencil: return UIImage(systemName: "pencil")
+            case .addText: return UIImage(systemName: "character.textbox")
+            case .undo: return UIImage(systemName: "arrow.uturn.backward")
+            case .redo: return UIImage(systemName: "arrow.uturn.forward")
+            case .close: return UIImage(systemName: "xmark")
+            case .save: return UIImage(systemName: "checkmark")
+            }
+        }
+        
+        var emojiIcon: String {
+            switch self {
+            case .addRect: return "🔳"
+            case .addLine: return "📏"
+            case .pencil: return "✏️"
+            case .addText: return "🆎"
+            case .undo: return "↩️"
+            case .redo: return "↪️"
+            case .close: return "❎"
+            case .save: return "✅"
             }
         }
         
         var tintColor: UIColor {
             switch self {
             case .addRect: return .systemGray
+            case .addLine: return .systemGray
+            case .pencil: return .systemGray
+            case .addText: return .systemGray
+            case .undo: return .systemGray
+            case .redo: return .systemGray
             case .close: return .systemRed
             case .save: return .systemGreen
             }
@@ -117,6 +146,8 @@ extension ScreenshotViewController {
             let button = UIButton()
             if #available(iOS 13.0, *) {
                 button.setImage(type.icon, for: .normal)
+            } else {
+                button.setTitle(type.emojiIcon, for: .normal)
             }
             button.tag = index
             button.tintColor = type.tintColor

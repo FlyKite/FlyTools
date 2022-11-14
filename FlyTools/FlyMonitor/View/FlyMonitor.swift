@@ -157,14 +157,14 @@ class FlyMonitor: UIView {
     }
     
     private func actionButton(_ type: ActionType) -> ActionButton {
-        let icon: UIImage?
+        let button = ActionButton()
         if #available(iOS 13.0, *) {
-            icon = type.icon
+            button.icon = type.icon
         } else {
-            icon = nil
+            button.emojiIcon = type.emojiIcon
         }
-        let title: String = type.title
-        return ActionButton(icon: icon, title: title)
+        button.title = type.title
+        return button
     }
 }
 
@@ -225,9 +225,18 @@ private class ActionButton: UIView {
     
     var onTap: (() -> Void)?
     
+    @available(iOS 13.0, *)
     var icon: UIImage? {
-        get { iconView.image }
-        set { iconView.image = newValue }
+        get { iconView?.image }
+        set {
+            iconView?.image = newValue
+            iconView?.isHidden = newValue == nil
+        }
+    }
+    
+    var emojiIcon: String? {
+        get { iconLabel?.text }
+        set { iconLabel?.text = newValue }
     }
     
     var title: String? {
@@ -235,15 +244,9 @@ private class ActionButton: UIView {
         set { titleLabel.text = newValue }
     }
     
-    private let iconView: UIImageView = UIImageView()
+    private var iconView: UIImageView?
+    private var iconLabel: UILabel?
     private let titleLabel: UILabel = UILabel()
-    
-    init(icon: UIImage?, title: String?) {
-        super.init(frame: .zero)
-        setupViews()
-        self.icon = icon
-        self.title = title
-    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -258,6 +261,7 @@ private class ActionButton: UIView {
     private func setupViews() {
         titleLabel.textColor = .white
         titleLabel.font = UIFont.systemFont(ofSize: 13)
+        titleLabel.numberOfLines = 0
         
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
         
@@ -266,8 +270,18 @@ private class ActionButton: UIView {
         stack.alignment = .center
         stack.spacing = 4
         
+        if #available(iOS 13.0, *) {
+            let iconView = UIImageView()
+            self.iconView = iconView
+            stack.addArrangedSubview(iconView)
+        } else {
+            let iconLabel = UILabel()
+            iconLabel.font = UIFont.systemFont(ofSize: 24)
+            self.iconLabel = iconLabel
+            stack.addArrangedSubview(iconLabel)
+        }
+        
         addSubview(stack)
-        stack.addArrangedSubview(iconView)
         stack.addArrangedSubview(titleLabel)
         
         stack.snp.makeConstraints { make in
@@ -293,6 +307,19 @@ extension ActionType {
         case .ruler: return UIImage(systemName: "ruler.fill", withConfiguration: config)
         case .info: return UIImage(systemName: "info.circle.fill", withConfiguration: config)
         case .toggleMonitor: return UIImage(systemName: "xmark.circle.fill", withConfiguration: config)
+        }
+    }
+    
+    var emojiIcon: String {
+        switch self {
+        case .fileBrowser: return "📦"
+        case .network: return "🌐"
+        case .log: return "📃"
+        case .location: return "🛰️"
+        case .screenshot: return "📷"
+        case .ruler: return "📐"
+        case .info: return "ℹ️"
+        case .toggleMonitor: return "✖️"
         }
     }
     

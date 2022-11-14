@@ -14,7 +14,4 @@ Pod::Spec.new do |s|
   s.source_files = 'FlyTools/**/*.swift'
   s.dependency 'SnapKit'
   s.dependency 'FlyUtils'
-  s.resource_bundles = {
-    'FlyToolsImages' => ['FlyTools/Resources/Images.xcassets']
-  }
 end
